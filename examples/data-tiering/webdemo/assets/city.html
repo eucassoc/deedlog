@@ -1,0 +1,47 @@
+{{define "city"}}<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{.Title}}｜あおば台市</title><link rel="stylesheet" href="/style.css"></head><body>
+<div class="c-top"><div class="wrap"><div class="c-logo">あ</div><div class="c-name">あおば台市<small>Aobadai City Official Website</small></div>
+<div class="c-tools">文字サイズ　標準　拡大｜Foreign Language</div></div></div>
+<div class="c-nav"><div class="wrap"><a href="/">ホーム</a><a href="#">くらし・手続き</a><a href="#">子育て・教育</a><a href="#">健康・福祉</a><a href="#">市政情報</a><a href="/contact" class="{{if eq .Page "contact"}}on{{end}}">お問い合わせ</a></div></div>
+<div class="wrap">
+{{if .Breach}}<div class="alert">【重要】{{.BreachDate}}　お問い合わせフォームの委託先サービスにおける不正アクセスについて　<a href="/news/breach">詳しくはこちら</a></div>{{end}}
+{{if eq .Page "home"}}
+<div class="hero"><div><b>緑と人がつながるまち、あおば台市</b><br>市民のみなさまの声をお待ちしています</div><a class="btn" href="/contact">お問い合わせはこちら</a></div>
+<div class="panel"><h1>お知らせ</h1><ul class="news">
+{{if .Breach}}<li><time>{{.BreachDate}}</time><a href="/news/breach">【重要】お問い合わせフォームの委託先サービスにおける不正アクセスについて</a></li>{{end}}
+<li><time>3月28日</time><span>令和8年度 ごみ収集カレンダーを掲載しました</span></li>
+<li><time>3月24日</time><span>お問い合わせの取り扱いを改善しました（記録の第三者確認を開始）</span></li>
+<li><time>3月19日</time><span>保育園の入園案内（4月入園）について</span></li></ul></div>
+{{else if eq .Page "contact"}}
+<div class="crumb">ホーム ＞ お問い合わせ</div>
+<div class="panel"><h1>お問い合わせフォーム</h1>
+<p>市政へのご意見・ご質問をお寄せください。担当課から回答します。</p>
+<form method="post" action="/contact">
+<label>お名前<span class="req">必須</span></label><input type="text" name="name" required>
+<label>メールアドレス<span class="req">必須</span></label><input type="email" name="email" required>
+<label>お問い合わせ内容<span class="req">必須</span></label><textarea name="message" required></textarea>
+<p style="font-size:14px;color:var(--muted);margin-top:18px">入力いただいた個人情報は、お問い合わせへの回答のためにのみ利用します。</p>
+<p style="margin-top:12px"><button class="btn">送信する</button></p></form></div>
+{{else if eq .Page "done"}}
+<div class="crumb">ホーム ＞ お問い合わせ ＞ 送信完了</div>
+<div class="panel"><h1>送信が完了しました</h1>
+<p>お問い合わせありがとうございます。担当課から回答します。</p>
+<div class="receipt"><div style="color:var(--muted)">お問い合わせの控え</div>
+<div class="no">受付番号 {{.Number}}</div><div>{{.Date}} 受付</div>
+<div class="note" id="promise"><b>あなたのお問い合わせの取り扱い（市の約束）</b><ul>
+<li>委託先のフォームサービスで受け付け、<b>7日以内</b>に市の庁内システムへ移して、フォームサービスからは削除します。</li>
+<li>庁内システムでは<b>30日後に削除</b>します。</li>
+<li>この取り扱いは記録され、市から独立した<b>あおば台市立図書館</b>と<b>サンプル監査法人</b>が確認しています。</li></ul></div>
+<p style="margin:14px 0 6px">約束どおりに扱われているかを、市から独立した確認サイトで、いつでも確かめられます。</p>
+<a class="btn green" id="check" href="{{.ReceiptURL}}" target="_blank">処理状況を確認する（記録確認ネット）</a>
+<p style="font-size:13px;color:var(--muted);margin:10px 0 0">このリンクに控えが含まれています。ブックマークするか、メールで保存してください。</p></div></div>
+{{else if eq .Page "breach"}}
+<div class="crumb">ホーム ＞ お知らせ</div>
+<div class="panel"><h1>お問い合わせフォームの委託先サービスにおける不正アクセスについて</h1>
+<p>{{.BreachDate}}、本市がお問い合わせフォームに利用しているフォームサービスの事業者から、同社のシステムが不正アクセスを受け、保存されていたお問い合わせ内容が流出した可能性があるとの報告がありました。</p>
+<p>本市は、お問い合わせの内容を受付から7日以内に庁内システムへ移し、フォームサービスからは削除しています。</p>
+<p><b>お問い合わせの控えをお持ちの方は、ご自身のお問い合わせが影響を受けたかどうかを、記録確認ネットで確かめられます。</b></p></div>
+{{end}}
+</div>
+<div class="c-foot"><div class="wrap">あおば台市役所　〒000-0000 あおば台市中央1-1-1　（このサイトは deedlog のデモです。実在の自治体とは関係ありません）</div></div>
+{{template "demo" .Demo}}</body></html>{{end}}

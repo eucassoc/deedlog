@@ -1,0 +1,15 @@
+{
+  "witnesses": [
+    "witness.example/w1+00000000+BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+  ],
+  "quorum": 1,
+  "operators": [
+    {
+      "name": "Example City cameras",
+      "origin": "city.example/cameras",
+      "checkpoint_key": "city.example/cameras+00000000+AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "receipt_key": "city.example/cameras/receipts+00000000+AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "url": "https://city.example/deedlog/cameras"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; connect-src *; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<title>deedlog receipt check</title>
+<link rel="stylesheet" href="style.css">
+<script src="wasm_exec.js"></script>
+<script src="app.js" defer></script>
+</head>
+<body>
+<main>
+  <h1 id="title">受領証の確認</h1>
+  <p id="intro" class="muted"></p>
+  <section id="status" class="status" hidden>
+    <h2 id="status-title"></h2>
+    <p id="status-detail"></p>
+    <p><a id="download" hidden download="misbehavior.json"></a></p>
+  </section>
+  <dl id="details" hidden>
+    <dt id="label-operator"></dt><dd id="operator"></dd>
+    <dt id="label-index"></dt><dd id="index"></dd>
+    <dt id="label-size"></dt><dd id="size"></dd>
+  </dl>
+  <section id="manual">
+    <label for="input" id="label-input"></label>
+    <textarea id="input" rows="6" spellcheck="false"></textarea>
+    <button id="run" type="button"></button>
+  </section>
+  <p id="footer" class="muted"></p>
+</main>
+</body>
+</html>

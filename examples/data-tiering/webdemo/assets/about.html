@@ -1,0 +1,25 @@
+{{define "about"}}<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>この仕組みの登場人物｜記録確認ネット</title><link rel="stylesheet" href="/style.css">
+<style>table.roles{border-collapse:collapse;width:100%;font-size:15px}table.roles th,table.roles td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}table.roles th{background:#eef3f8}.tag{display:inline-block;font-size:12px;border-radius:3px;padding:0 6px;margin-left:4px}.need{background:#fde2e1;color:#7f1d1d}.noneed{background:#dcfce7;color:#14532d}</style></head><body>
+<div class="v-top"><div class="wrap"><div class="v-mark">✓</div><div class="v-name">記録確認ネット<small>運営：NPO法人 あおば台市民情報ネットワーク（市から独立した団体です）</small></div></div></div>
+<div class="wrap"><div class="panel">
+<h1>この仕組みの登場人物</h1>
+<p>記録を確かめる仕組みには、市のほかにいくつもの立場の人が関わっています。それぞれが防いでいる不正は違い、<b>信頼しなければならない相手は一部だけ</b>です。</p>
+<table class="roles">
+<tr><th>役割</th><th>このデモでは</th><th>していること</th><th>防いでいる不正</th></tr>
+<tr><td>運営者</td><td>あおば台市</td><td>記録を書き、署名して公開します</td><td>（防がれる側）</td></tr>
+<tr><td>連署サーバー<span class="tag noneed">信頼不要</span></td><td>あおば台市立図書館、サンプル監査法人</td><td>以前の記録と矛盾がないかを機械的に確かめ、連署します。中身は見ません</td><td>記録の書き換え、相手ごとに違う記録を見せること</td></tr>
+<tr><td>タイムスタンプ局<span class="tag need">信頼が必要</span></td><td>（省略）</td><td>その記録がいつ存在したかを証明します</td><td>日付のごまかし</td></tr>
+<tr><td>控えを持つ人<span class="tag noneed">信頼不要</span></td><td>山田さん、佐藤さん</td><td>自分に関する記録の約束を、手元に持ちます</td><td>記録から外すこと、すり替え</td></tr>
+<tr><td>確かめる人<span class="tag noneed">信頼不要</span></td><td>記録確認ネット</td><td>市の公開記録を取り寄せて自分で検証し、約束と照らし合わせます。誰でも同じ検証ができます</td><td>違反の見落とし、市の説明だけで済まされること</td></tr>
+<tr><td>信頼リストを作る人<span class="tag need">信頼が必要</span></td><td>記録確認ネット</td><td>どの市の鍵と、どの連署サーバーを信じるかを決めます</td><td>偽の運営者、市となれ合う連署サーバー</td></tr>
+<tr><td>記録の出どころ<span class="tag need">市と利害が別であること</span></td><td>（このデモでは市自身）</td><td>出来事を直接見た当事者が、見たことに署名します。たとえば委託先が「削除しました」と署名します</td><td>記録の中身の嘘</td></tr>
+</table>
+<h2>保証できること、できないこと</h2>
+<p>連署サーバー、控え、確認サイトがそろうと、記録は<b>あとから変えられず、誰にでも同じものが見える</b>ようになります。ただし、記録の中身が本当かどうかは別の問題です。このデモでは、移動や削除の記録を書いているのは市自身なので、市の申告です。</p>
+<p>それでも、市の説明を信じるしかない状態とは違います。申告は事件の前から署名つきで固定されていて、あとから都合よく足したり日付を変えたりはできません。ほかの証拠と食い違えば、その記録自体が虚偽の証拠になります。さらに委託先など<b>市と利害の違う当事者が署名した記録</b>を加えれば、両者がそろって嘘をつかない限り、中身も確かになります。</p>
+<p>委託先のバックアップや手作業のコピーなど、記録の外にあるものは確かめられません。監査や内部通報などで補います。</p>
+<p><a href="javascript:history.back()">← 戻る</a></p>
+</div></div>
+<div class="c-foot"><div class="wrap">記録確認ネットは、市が公開する記録と、図書館・監査法人の確認（連署）を、市のシステムとは別に検証しています。お問い合わせの内容そのものは、市から受け取りません。</div></div>
+{{template "demo" .Demo}}</body></html>{{end}}

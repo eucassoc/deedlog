@@ -1,0 +1,15 @@
+{{define "demo"}}
+<div class="demo"><div class="wrap">
+<span class="tag">デモ操作</span><span style="opacity:.75">実際のサイトにはありません</span>
+<span class="date">デモ内の日付：{{.Date}}</span>
+<form method="post" action="{{.City}}/demo/advance?days=1"><input type="hidden" name="back"><button>1日進める</button></form>
+<form method="post" action="{{.City}}/demo/advance?days=7"><input type="hidden" name="back"><button>7日進める</button></form>
+<form method="post" action="{{.City}}/demo/advance?days=30"><input type="hidden" name="back"><button>30日進める</button></form>
+{{if .TransferDown}}<form method="post" action="{{.City}}/demo/transfer?down=0"><input type="hidden" name="back"><button class="warn">移動ジョブを直す</button></form><span class="on">移動ジョブ停止中</span>
+{{else}}<form method="post" action="{{.City}}/demo/transfer?down=1"><input type="hidden" name="back"><button class="warn">移動ジョブが止まる（障害）</button></form>{{end}}
+<form method="post" action="{{.City}}/demo/breach"><input type="hidden" name="back"><button class="bad">委託先の漏洩が公表される</button></form>
+<form method="post" action="{{.City}}/demo/tamper"><input type="hidden" name="back"><button class="bad">市が記録を書き換える</button></form>
+<form method="post" action="{{.City}}/demo/reset"><input type="hidden" name="back"><button>最初から</button></form>
+</div></div>
+<script>for(const i of document.querySelectorAll('.demo input[name=back]'))i.value=location.href</script>
+{{end}}

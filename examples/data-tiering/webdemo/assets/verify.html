@@ -1,0 +1,32 @@
+{{define "verify"}}<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>記録確認ネット</title><link rel="stylesheet" href="/style.css"></head><body>
+<div class="v-top"><div class="wrap"><div class="v-mark">✓</div><div class="v-name">記録確認ネット<small>運営：NPO法人 あおば台市民情報ネットワーク（市から独立した団体です）</small></div></div></div>
+<div class="wrap" id="app">
+<div class="panel"><h1>お問い合わせの処理状況</h1><p id="loading">市の公開記録を取得して確かめています…</p></div>
+</div>
+<div class="c-foot"><div class="wrap">記録確認ネットは、市が公開する記録と、図書館・監査法人の確認（連署）を、市のシステムとは別に検証しています。お問い合わせの内容そのものは、市から受け取りません。</div></div>
+{{template "demo" .Demo}}
+<script>
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const r=new URLSearchParams(location.hash.slice(1)).get('r');
+async function main(){
+ const app=document.getElementById('app');
+ if(!r){app.innerHTML='<div class="panel"><h1>記録確認ネット</h1><p>市から受け取った控えのリンクを開くと、ここで処理状況を確かめられます。</p><p><a href="/about">この仕組みの登場人物と、保証できること・できないこと</a></p></div>';return}
+ const resp=await fetch('/api/status?r='+encodeURIComponent(r));
+ if(!resp.ok){app.innerHTML='<div class="panel"><h1>確認できませんでした</h1><p>'+esc(await resp.text())+'</p></div>';return}
+ const s=await resp.json();
+ const icon={done:'✓',late:'!',waiting:'…'};
+ let h='<div class="panel"><div style="color:var(--muted)">あおば台市　お問い合わせ　受付番号 '+esc(s.number)+'</div>';
+ h+='<div class="verdict '+esc(s.verdict)+'"><h2>'+esc(s.headline)+'</h2><div>'+esc(s.detail)+'</div></div>';
+ if(s.breach)h+='<div class="box '+s.breach.kind+'"><b>'+esc(s.breach.title)+'</b>'+s.breach.lines.map(l=>'<div>'+esc(l)+'</div>').join('')+'</div>';
+ if(s.steps&&s.steps.length){h+='<h2>あなたのお問い合わせの記録</h2><ul class="steps">';
+  for(const st of s.steps)h+='<li><div class="dot '+st.kind+'">'+icon[st.kind]+'</div><div><b>'+esc(st.title)+'</b> <span class="when">'+esc(st.date)+'</span><div>'+esc(st.note)+'</div></div></li>';
+  h+='</ul>'}
+ if(s.verdict!=='tampered')h+='<div style="margin-top:16px;font-size:14px">この記録は、市から独立した次の機関が確認（連署）しています'+(s.checked_at?'（'+esc(s.checked_at)+'）':'')+'：<div class="wit">'+s.witnesses.map(w=>'<span>✓ '+esc(w)+'</span>').join('')+'</div><div style="margin-top:10px"><a href="/about">この仕組みの登場人物と、保証できること・できないこと</a></div></div>';
+ if(s.proof){const u=URL.createObjectURL(new Blob([s.proof],{type:'application/json'}));h+='<h2>書き換えの証明</h2><p>市の署名が入ったこのファイルは、市が控えの約束を破ったことの証明です。市の公開鍵だけで、誰でも検証できます。報道機関や監査機関に提出できます。</p><a class="btn" download="misbehavior.json" href="'+u+'">証明ファイルを保存する</a><details style="margin-top:12px"><summary style="font-size:14px;color:var(--muted)">中身を見る（技術者向け）</summary><pre class="proof">'+esc(s.proof)+'</pre></details>'}
+ h+='</div>';
+ if(s.city)h+='<div class="panel"><div class="box '+s.city.kind+'" style="margin:0"><b>'+esc(s.city.title)+'</b>'+s.city.lines.map(l=>'<div>'+esc(l)+'</div>').join('')+'</div></div>';
+ app.innerHTML=h;
+}
+main();
+</script></body></html>{{end}}

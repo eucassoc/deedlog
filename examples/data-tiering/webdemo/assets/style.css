@@ -1,0 +1,69 @@
+:root{--blue:#1d5fa8;--blue-d:#164a83;--green:#1a7f37;--red:#c62828;--amber:#b26a00;--ink:#1f2328;--muted:#5f6b7a;--line:#d9dee5;--bg:#f5f7fa}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.75 "Noto Sans CJK JP","Hiragino Sans","Yu Gothic",sans-serif;color:var(--ink);background:var(--bg);padding-bottom:120px}
+a{color:var(--blue)}
+.wrap{max-width:960px;margin:0 auto;padding:0 20px}
+/* city site */
+.c-top{background:#fff;border-bottom:1px solid var(--line)}
+.c-top .wrap{display:flex;align-items:center;gap:14px;height:76px}
+.c-logo{width:44px;height:44px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#7cc576,#2e8b57);display:grid;place-items:center;color:#fff;font-weight:700}
+.c-name{font-size:22px;font-weight:700;letter-spacing:.05em}
+.c-name small{display:block;font-size:12px;color:var(--muted);font-weight:400;letter-spacing:0}
+.c-tools{margin-left:auto;font-size:13px;color:var(--muted)}
+.c-nav{background:var(--blue)}
+.c-nav .wrap{display:flex}
+.c-nav a{color:#fff;text-decoration:none;padding:12px 18px;font-size:15px}
+.c-nav a:hover,.c-nav a.on{background:var(--blue-d)}
+.crumb{font-size:13px;color:var(--muted);margin:16px 0}
+.panel{background:#fff;border:1px solid var(--line);border-radius:6px;padding:28px 32px;margin-bottom:24px}
+h1{font-size:26px;margin:0 0 16px;border-left:6px solid var(--blue);padding-left:12px}
+h2{font-size:19px;margin:24px 0 10px}
+.hero{background:linear-gradient(120deg,#e8f2fb,#eef7ec);border-radius:6px;padding:36px;margin:20px 0;display:flex;justify-content:space-between;align-items:center}
+.hero b{font-size:24px}
+.news{list-style:none;padding:0;margin:0}
+.news li{border-bottom:1px dashed var(--line);padding:10px 0;display:flex;gap:18px}
+.news time{color:var(--muted);min-width:110px}
+.alert{background:#fdecea;border:2px solid var(--red);color:#7f1d1d;border-radius:6px;padding:14px 18px;margin:16px 0;font-weight:700}
+.alert a{color:#7f1d1d}
+label{display:block;font-weight:700;margin:14px 0 6px}
+label .req{background:var(--red);color:#fff;font-size:12px;padding:1px 6px;border-radius:3px;margin-left:6px}
+input[type=text],input[type=email],textarea{width:100%;padding:10px 12px;border:1px solid #b9c2cd;border-radius:4px;font:inherit}
+textarea{height:120px}
+.note{background:#f0f6ff;border:1px solid #c9dcf5;border-radius:6px;padding:14px 18px;font-size:14px;margin:18px 0}
+.note ul{margin:6px 0 0;padding-left:20px}
+.btn{display:inline-block;background:var(--blue);color:#fff;border:0;border-radius:4px;padding:12px 28px;font:inherit;font-weight:700;cursor:pointer;text-decoration:none}
+.btn:hover{background:var(--blue-d)}
+.btn.green{background:var(--green)}
+.receipt{border:2px dashed #9aa7b5;border-radius:8px;padding:20px 24px;background:#fffef7;margin:20px 0}
+.receipt .no{font-size:28px;font-weight:700;letter-spacing:.08em}
+.c-foot{background:#2b3440;color:#c9d1d9;font-size:13px;padding:24px 0;margin-top:40px}
+/* checking site */
+.v-top{background:#0f3d3e;color:#fff}
+.v-top .wrap{display:flex;align-items:center;height:68px;gap:12px}
+.v-mark{width:36px;height:36px;border-radius:8px;background:#f2c94c;color:#0f3d3e;display:grid;place-items:center;font-weight:900}
+.v-name{font-size:20px;font-weight:700}
+.v-name small{display:block;font-size:12px;font-weight:400;opacity:.8}
+.verdict{border-radius:8px;padding:20px 24px;margin:20px 0;color:#fff}
+.verdict h2{margin:0 0 4px;font-size:22px}
+.verdict.ok{background:var(--green)}.verdict.pending{background:#56677a}.verdict.warning{background:var(--amber)}.verdict.tampered{background:var(--red)}
+.steps{list-style:none;margin:0;padding:0}
+.steps li{display:flex;gap:16px;padding:12px 0;border-bottom:1px solid var(--line)}
+.dot{width:30px;height:30px;border-radius:50%;flex:none;display:grid;place-items:center;color:#fff;font-weight:700}
+.dot.done{background:var(--green)}.dot.late{background:var(--red)}.dot.waiting{background:#aab4bf}
+.steps .when{color:var(--muted);font-size:14px}
+.box{border-radius:8px;padding:16px 20px;margin:18px 0;border:2px solid}
+.box.ok{border-color:var(--green);background:#eef8f0}.box.bad{border-color:var(--red);background:#fdecea}
+.box b{display:block;margin-bottom:6px}
+.wit{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+.wit span{background:#eef3f8;border:1px solid var(--line);border-radius:20px;padding:2px 12px;font-size:14px}
+pre.proof{background:#111;color:#ddd;font-size:11px;padding:12px;border-radius:6px;max-height:160px;overflow:auto}
+/* demo panel */
+.demo{position:fixed;left:0;right:0;bottom:0;background:#20242b;color:#e6e6e6;font-size:14px;z-index:10;border-top:3px solid #f2c94c}
+.demo .wrap{max-width:1200px;display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:10px 20px}
+.demo .tag{background:#f2c94c;color:#20242b;font-weight:700;padding:2px 8px;border-radius:3px}
+.demo .date{font-weight:700;margin-right:10px}
+.demo form{display:inline;margin:0}
+.demo button{background:#3a414c;color:#fff;border:1px solid #59616d;border-radius:4px;padding:6px 10px;font:inherit;cursor:pointer}
+.demo button:hover{background:#4a5260}
+.demo button.warn{border-color:#d97706}.demo button.bad{border-color:#dc2626}
+.demo .on{color:#f87171;font-weight:700}
