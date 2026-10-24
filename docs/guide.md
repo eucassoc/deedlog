@@ -134,3 +134,22 @@ dlog receipt check -receipt receipt -receipt-key receipts.vkey \
 
 The [verification page](../web/) checks receipt links in the browser. It is
 hosted by someone other than the operator.
+
+## What the published records reveal
+
+The rules an operator declares, such as how long data stays where and how
+often it is inventoried, are public by design: verifiers check the chain
+against them. Anyone can read them, so posing as a user to obtain a receipt
+reveals nothing more, and a receipt shows only its own holder's event.
+Publishing the rules does not weaken the systems they describe. Those are
+protected by access control, not by keeping the rules secret, and a declared
+short retention makes the data held less worth attacking.
+
+Records hold digests, so they do not reveal the evidence. They can reveal
+patterns, which the operator should limit:
+
+| Visible in records | Can reveal | What to do |
+|---|---|---|
+| Counts in inventories | Volume and its changes over time | Record only what the declared rules need |
+| Times of recurring jobs | When data moves, and so when it is where | Declare limits only, and vary when jobs run |
+| Names of systems and tiers | Vendors and products in use | Use generic names, such as `form-service` and `archive` |
