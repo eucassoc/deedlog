@@ -36,13 +36,61 @@ dlog witness -key witness.key -log operator.vkey -state witness.state -listen :8
 
 ## Timestamps
 
+A time-stamp proves that a checkpoint, and so every record it covers, existed
+at that time. One time-stamp covers everything before it, so a chain needs one
+per checkpoint, not one per record. A time-stamp cannot be obtained later for
+an earlier time.
+
 ```sh
 dlog timestamp -tsa https://timestamp.sectigo.com -out checkpoint.tsr checkpoint
 dlog verify -checkpoint checkpoint -key operator.vkey -timestamp checkpoint.tsr chain.jsonl
 ```
 
-Where legal standing matters, use an accredited time-stamping authority and
-pass its root certificates with `-tsa-roots`.
+Authorities whose root certificates are not in the system's store, such as
+FreeTSA, need them passed with `-tsa-roots`, both when stamping and when
+verifying.
+
+### Free and accredited authorities
+
+Any RFC 3161 authority works; which to use is a matter of operation. Free
+authorities (FreeTSA, DigiCert, Sectigo), together with witness cosignatures,
+which carry each witness's time, are enough day to day. Stamping with two or
+three of them avoids depending on any one.
+
+Where a law requires accredited time-stamps, such as Japan's Electronic Books
+Maintenance Act, or a dispute in court is likely, also stamp with an
+accredited authority. Accredited stamps are paid for one by one, so stamp
+less often:
+
+| | Free authorities | Accredited authority |
+|---|---|---|
+| How often | Every checkpoint | Once a day, or once an hour |
+| Stamps a year | One per checkpoint | 365 (8,760 hourly) |
+| Time proven to within | The checkpoint interval | A day, or an hour |
+
+For example, run hourly and daily from cron:
+
+```sh
+# Hourly: checkpoint, witnesses, two free authorities
+cp="cp/$(date -u +%Y%m%dT%H)"
+dlog checkpoint -key operator.key chain.jsonl > "$cp"
+dlog cosign -key operator.vkey -witness w1.vkey=https://w1.example -out "$cp.cosigned" chain.jsonl "$cp"
+dlog timestamp -tsa https://freetsa.org/tsr -tsa-roots freetsa-root.pem -out "$cp.freetsa.tsr" "$cp"
+dlog timestamp -tsa https://timestamp.sectigo.com -out "$cp.sectigo.tsr" "$cp"
+
+# Daily: an accredited authority stamps the latest checkpoint
+latest=$(ls cp/*T?? | tail -1)
+dlog timestamp -tsa "$ACCREDITED_TSA_URL" -tsa-roots accredited-roots.pem -out "$latest.accredited.tsr" "$latest"
+```
+
+When a dispute becomes likely, add an accredited time-stamp at once. It fixes
+everything recorded up to that moment, though not the earlier times, which
+rest on the time-stamps taken then.
+
+Time-stamps can be verified only while the authority's certificate chain is
+valid. Records kept for many years need their time-stamps stamped again
+before then, as long-term signature formats such as PAdES do; `dlog` does not
+do this yet.
 
 ## Proofs of misbehavior
 

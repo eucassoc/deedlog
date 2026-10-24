@@ -18,5 +18,6 @@ Next:
 - [ ] Libraries for embedding in products, and a collector for other languages
 - [ ] SD-JWT VC receipt envelope (OpenID4VCI / OpenID4VP)
 - [ ] ML-DSA-44 cosignatures
+- [ ] Renewal of time-stamps for long-term retention
 - [ ] Declared scope and cadence; source signatures; references between chains
 - [ ] Exporters: OSCAL assessment results, legal evidence bundle

@@ -36,12 +36,52 @@ dlog witness -key witness.key -log operator.vkey -state witness.state -listen :8
 
 ## タイムスタンプ
 
+タイムスタンプは、チェックポイントと、それがまとめている全記録が、その時点で存在したことを証明します。
+1回のタイムスタンプがそれ以前のすべてを押さえるので、記録ごとではなくチェックポイントごとに押せば足ります。
+過去の時点のタイムスタンプを、あとから取ることはできません。
+
 ```sh
 dlog timestamp -tsa https://timestamp.sectigo.com -out checkpoint.tsr checkpoint
 dlog verify -checkpoint checkpoint -key operator.vkey -timestamp checkpoint.tsr chain.jsonl
 ```
 
-法的な証拠力が必要な場合は、総務大臣認定のタイムスタンプ局を使い、そのルート証明書を `-tsa-roots` で指定します。
+FreeTSA のように、ルート証明書が OS の証明書ストアにないタイムスタンプ局は、押すときも検証するときも `-tsa-roots` で指定します。
+
+### 無償のタイムスタンプ局と認定タイムスタンプ局
+
+RFC 3161 のタイムスタンプ局ならどれでも使えます。どれを使うかは運用で決めます。
+ふだんは、無償のタイムスタンプ局（FreeTSA、DigiCert、Sectigo など）と、連署サーバーの連署（連署した時刻が入っています）で十分です。
+無償のタイムスタンプ局を2〜3か所使えば、1か所に頼らずに済みます。
+
+電子帳簿保存法のように法令で認定タイムスタンプが求められる場合や、裁判になる可能性がある場合は、総務大臣認定のタイムスタンプ局も併用します。
+認定タイムスタンプは1件ごとに費用がかかるので、間隔をあけて押します。
+
+| | 無償のタイムスタンプ局 | 認定タイムスタンプ局 |
+|---|---|---|
+| 押す間隔 | チェックポイントごと | 1日1回、または1時間に1回 |
+| 年間の件数 | チェックポイントの数 | 365件（1時間ごとなら8,760件） |
+| 証明できる時刻の精度 | チェックポイントの間隔 | 1日、または1時間 |
+
+たとえば cron で、1時間ごとと1日ごとに実行します。
+
+```sh
+# 1時間ごと：チェックポイント、連署、無償のタイムスタンプ局2か所
+cp="cp/$(date -u +%Y%m%dT%H)"
+dlog checkpoint -key operator.key chain.jsonl > "$cp"
+dlog cosign -key operator.vkey -witness w1.vkey=https://w1.example -out "$cp.cosigned" chain.jsonl "$cp"
+dlog timestamp -tsa https://freetsa.org/tsr -tsa-roots freetsa-root.pem -out "$cp.freetsa.tsr" "$cp"
+dlog timestamp -tsa https://timestamp.sectigo.com -out "$cp.sectigo.tsr" "$cp"
+
+# 1日ごと：最新のチェックポイントに認定タイムスタンプ
+latest=$(ls cp/*T?? | tail -1)
+dlog timestamp -tsa "$ACCREDITED_TSA_URL" -tsa-roots accredited-roots.pem -out "$latest.accredited.tsr" "$latest"
+```
+
+紛争になりそうだと分かった時点で、すぐに認定タイムスタンプを追加します。その時点までの全記録が固定されます。
+ただし、それより前の時刻は、その時々に押したタイムスタンプで示すことになります。
+
+タイムスタンプを検証できるのは、タイムスタンプ局の証明書が有効な間だけです。
+何年も保存する記録は、有効期限が切れる前にタイムスタンプの上から押し直す必要があります（PDF の長期署名 PAdES と同じ考え方）。`dlog` はまだこれに対応していません。
 
 ## 不正の証明
 
