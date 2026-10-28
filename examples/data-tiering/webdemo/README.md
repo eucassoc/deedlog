@@ -26,6 +26,35 @@ The checking site then shows the resident:
 - that the city rewrote its records, with the resident's receipt and the
   city's signed checkpoint as a proof of misbehavior anyone can check.
 
+## Walkthrough
+
+The steps of the recorded demo, about three minutes. Buttons are named as
+they appear on the pages.
+
+1. On the city's home page, click 「お問い合わせはこちら」 and send an
+   inquiry. The receipt page shows the city's promise: off the form service
+   within 7 days, deleted 30 days later, witnessed by the library and the
+   audit firm.
+2. Click 「処理状況を確認する（記録確認ネット）」. The checking site shows
+   「受付済み・第三者の確認待ち」: the city has not had today's records
+   cosigned yet.
+3. In the panel, click 「7日進める」. The inquiry was moved to the city's
+   archive: 「約束どおりに扱われています」.
+4. Back on the city's site, click 「移動ジョブが止まる（障害）」 and send a
+   second inquiry. Keep its link.
+5. Click 「7日進める」 and 「1日進める」 three times, then
+   「委託先の漏洩が公表される」. The city's home page announces the breach,
+   saying inquiries are moved off the form service within 7 days.
+6. Open the second inquiry's link: 「市の約束が守られていません」. It was
+   still on the form service, 10 days after it was sent, when the breach was
+   announced. The first inquiry's link shows it had left before.
+7. Click 「市が記録を書き換える」 and open the second link again: the
+   checking site finds the rewrite and offers the proof of misbehavior as a
+   file anyone can verify.
+
+「最初から」 starts over. Receipt links differ only after `#`, so reload the
+checking site after opening another link.
+
 ## Roles in the demo
 
 The checking site's page "この仕組みの登場人物" explains the roles of the
