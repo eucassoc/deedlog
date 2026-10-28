@@ -19,8 +19,8 @@ witnesses do. Each run writes its chain, checkpoint and keys to a directory,
 where `dlog verify` checks them.
 
 The samples that issue receipts (data tiering, municipal data platform, agent
-payments) also write the receipt and a `registry.json`, so the receipt can be
-checked on the [verification page](../web/):
+payments, official videos) also write the receipt and a `registry.json`, so
+the receipt can be checked on the [verification page](../web/):
 
 ```sh
 go run ./examples/data-tiering -out out
@@ -39,6 +39,7 @@ cat out/1/receipt.url    # open this link in a browser
 | [Dataspaces](dataspaces/) | Contract negotiations, transfers and policy enforcement between connectors | Dataspace Protocol, EDC, Gaia-X, DATA-EX |
 | [Device-originated data](device-data/) | Data signed by the device that produced it | Sensors, meters, cameras |
 | [Content provenance](content-provenance/) | Capture, editing and publication of media | C2PA |
+| [Official videos edited with AI](official-videos/) | That each video was made from registered footage under a published editing recipe | Fan clubs, sports and entertainment media |
 | [Agent payments](agent-payments/) | What was requested and delivered for each payment | x402 |
 | [Proof of environmental value](environmental-value/) | Metering, reporting and verification behind carbon credits and energy certificates | J-Credits, non-fossil certificates, registries |
 

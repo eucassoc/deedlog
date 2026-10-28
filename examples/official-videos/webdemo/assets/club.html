@@ -1,0 +1,36 @@
+{{define "club"}}<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{.Title}}｜朝霧 蓮 オフィシャルファンクラブ</title><link rel="stylesheet" href="/style.css"></head><body class="club">
+<div class="f-top"><div class="wrap"><div class="f-logo">蓮</div><div class="f-name">朝霧 蓮 オフィシャルファンクラブ<small>REN ASAGIRI OFFICIAL FAN CLUB</small></div><div class="f-member">会員：山田 さま</div></div></div>
+<div class="f-nav"><div class="wrap"><a href="/"{{if eq .Page "home"}} class="on"{{end}}>ホーム</a><a href="/"{{if eq .Page "video"}} class="on"{{end}}>公式動画</a><a href="/recipe"{{if eq .Page "recipe"}} class="on"{{end}}>編集レシピ</a><a href="#">スケジュール</a><a href="#">会員情報</a></div></div>
+<div class="wrap">
+{{if eq .Page "home"}}
+<div class="f-hero"><div><b>会員限定 公式動画</b><div>練習、会見、試合の舞台裏を、毎日お届けします。</div></div><a class="btn gold" href="/recipe">公式動画の作り方</a></div>
+<h2 class="f-h">新着の公式動画</h2>
+<div class="grid">{{range .Videos}}
+<a class="card" href="/videos/{{.N}}"><div class="thumb"><span class="play">▶</span><span class="dur">{{.Duration}}</span><span class="badge">公式</span></div><div class="ct"><b>{{.Title}}</b><div class="when">{{.DateText}}</div></div></a>
+{{end}}</div>
+{{else if eq .Page "video"}}{{with .Video}}
+<div class="crumb">ホーム ＞ 公式動画 ＞ {{.Title}}</div>
+<div class="player"><span class="play big">▶</span><div class="ptitle">{{.Title}}</div><div class="pbar"><span></span></div><span class="dur">{{.Duration}}</span></div>
+<div class="panel dark">
+<div class="badge inline">公式</div> <span class="when">{{.DateText}} 公開</span>
+<h1>{{.Title}}</h1>
+<p>{{.Desc}}</p>
+<div class="note">公式動画は、撮影した素材を、公開している<a href="/recipe">編集レシピ</a>どおりに編集して作っています。どの素材をどう編集したかは記録され、ファンクラブから独立した機関が確認しています。</div>
+<a class="btn gold" id="check" href="{{.ReceiptURL}}" target="_blank">この動画の来歴を確認する</a>
+<div class="when" style="margin-top:8px">確認ページは、ファンクラブから独立したサイトで開きます。</div>
+</div>
+{{end}}{{else if eq .Page "recipe"}}
+<div class="crumb">ホーム ＞ 編集レシピ</div>
+<div class="panel dark">
+<h1>公式動画の編集レシピ「{{.Recipe}}」</h1>
+<p>公式動画は、撮影スタッフが撮った素材を、生成エンジンで自動編集して作っています。生成エンジンができる加工は、このレシピで決めています。</p>
+<h2>行う加工</h2><ul class="ops">{{range .Allowed}}<li>✓ {{.}}</li>{{end}}</ul>
+<h2>行わないこと</h2><ul class="ops no"><li>✕ 素材にない場面・人物・音声をAIで作ること</li><li>✕ 表情や発言を変えること</li></ul>
+<div class="note">撮影した素材、このレシピ、生成エンジンの署名付きの編集記録は、書き換えられない記録として残し、ファン有志の会と監査法人が確認しています。動画ごとの「来歴を確認する」から、誰でも確かめられます。</div>
+</div>
+{{end}}
+</div>
+<div class="f-foot"><div class="wrap">© REN ASAGIRI OFFICIAL FAN CLUB　（このサイトは deedlog のデモです。登場する人物・団体は架空です）</div></div>
+{{template "demo" .Demo}}
+</body></html>{{end}}

@@ -1,0 +1,12 @@
+{{define "demo"}}
+<div class="demo"><div class="wrap">
+<span class="tag">デモ操作</span><span style="opacity:.75">実際のサイトにはありません</span>
+<span class="date">デモ内の日付：{{.Date}}</span>
+<form method="post" action="{{.Club}}/demo/publish"><input type="hidden" name="back"><button>撮影してレシピどおりに公開</button></form>
+<form method="post" action="{{.Club}}/demo/generate"><input type="hidden" name="back"><button class="warn">AIで場面を足して公開</button></form>
+<form method="post" action="{{.Club}}/demo/other-app"><input type="hidden" name="back"><button class="warn">別のアプリで編集して公開</button></form>
+<form method="post" action="{{.Club}}/demo/tamper"><input type="hidden" name="back"><button class="bad">運営が記録を書き換える</button></form>
+<form method="post" action="{{.Club}}/demo/reset"><input type="hidden" name="back"><button>最初から</button></form>
+</div></div>
+<script>for(const i of document.querySelectorAll('.demo input[name=back]'))i.value=location.href</script>
+{{end}}

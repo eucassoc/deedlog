@@ -1,0 +1,32 @@
+{{define "verify"}}<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>公式動画 来歴チェック</title><link rel="stylesheet" href="/style.css"></head><body>
+<div class="v-top"><div class="wrap"><div class="v-mark">✓</div><div class="v-name">公式動画 来歴チェック<small>運営：来歴確認サービス（ファンクラブから独立して検証します）</small></div></div></div>
+<div class="wrap" id="app">
+<div class="panel"><h1>公式動画の来歴</h1><p id="loading">ファンクラブの公開記録を取得して確かめています…</p></div>
+</div>
+<div class="c-foot"><div class="wrap">来歴チェックは、ファンクラブが公開する記録、生成エンジンの署名、ファン有志の会・監査法人の確認（連署）を、ファンクラブのシステムとは別に検証しています。撮影素材や動画そのものは受け取りません。</div></div>
+{{template "demo" .Demo}}
+<script>
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const r=new URLSearchParams(location.hash.slice(1)).get('r');
+async function main(){
+ const app=document.getElementById('app');
+ if(!r){app.innerHTML='<div class="panel"><h1>公式動画 来歴チェック</h1><p>公式動画のページにある「この動画の来歴を確認する」から開くと、ここでその動画の来歴を確かめられます。</p></div>';return}
+ const resp=await fetch('/api/status?r='+encodeURIComponent(r));
+ if(!resp.ok){app.innerHTML='<div class="panel"><h1>確認できませんでした</h1><p>'+esc(await resp.text())+'</p></div>';return}
+ const s=await resp.json();
+ const icon={done:'✓',late:'!',waiting:'…'};
+ let h='<div class="panel"><div style="color:var(--muted)">朝霧 蓮 オフィシャルファンクラブ　公式動画'+(s.title?'「'+esc(s.title)+'」':'')+'</div>';
+ h+='<div class="verdict '+esc(s.verdict)+'"><h2>'+esc(s.headline)+'</h2><div>'+esc(s.detail)+'</div></div>';
+ if(s.steps&&s.steps.length){h+='<h2>この動画ができるまで</h2><ul class="steps">';
+  for(const st of s.steps)h+='<li><div class="dot '+st.kind+'">'+icon[st.kind]+'</div><div><b>'+esc(st.title)+'</b> <span class="when">'+esc(st.date)+'</span><div>'+esc(st.note)+'</div></div></li>';
+  h+='</ul>'}
+ if(s.allowed&&s.allowed.length)h+='<div class="box ok"><b>公開レシピで認められた加工</b>'+s.allowed.map(a=>'<span class="chip">'+esc(a)+'</span>').join('')+'<div style="margin-top:6px;font-size:14px">素材にない場面・人物・音声を作ることは、レシピで認められていません。</div></div>';
+ if(s.verdict!=='tampered')h+='<div style="margin-top:16px;font-size:14px">この記録は、ファンクラブから独立した次の機関が確認（連署）しています：<div class="wit">'+s.witnesses.map(w=>'<span>✓ '+esc(w)+'</span>').join('')+'</div></div>';
+ if(s.proof){const u=URL.createObjectURL(new Blob([s.proof],{type:'application/json'}));h+='<h2>書き換えの証明</h2><p>ファンクラブの署名が入ったこのファイルは、ファンクラブが動画のリンクで約束した記録を差し替えたことの証明です。ファンクラブの公開鍵だけで、誰でも検証できます。</p><a class="btn" download="misbehavior.json" href="'+u+'">証明ファイルを保存する</a><details style="margin-top:12px"><summary style="font-size:14px;color:var(--muted)">中身を見る（技術者向け）</summary><pre class="proof">'+esc(s.proof)+'</pre></details>'}
+ h+='</div>';
+ if(s.club)h+='<div class="panel"><div class="box '+s.club.kind+'" style="margin:0"><b>'+esc(s.club.title)+'</b>'+s.club.lines.map(l=>'<div>'+esc(l)+'</div>').join('')+'</div></div>';
+ app.innerHTML=h;
+}
+main();
+</script></body></html>{{end}}
