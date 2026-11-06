@@ -76,7 +76,7 @@ In production the voucher is a verifiable credential (an SD-JWT VC or a W3C
 VC) bound to the holder's key, and the presentation a verifiable
 presentation; the sample reduces both to the fields it uses. The issuing and
 settlement service this sample models is developed in the open at
-[joeartsea/RaaS](https://github.com/joeartsea/RaaS).
+[joeartsea/walife](https://github.com/joeartsea/walife).
 
 ## Run the sample
 
