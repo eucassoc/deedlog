@@ -19,7 +19,7 @@ witnesses do. Each run writes its chain, checkpoint and keys to a directory,
 where `dlog verify` checks them.
 
 The samples that issue receipts (data tiering, municipal data platform, agent
-payments, official videos) also write the receipt and a `registry.json`, so
+payments, official videos, reward vouchers) also write the receipt and a `registry.json`, so
 the receipt can be checked on the [verification page](../web/):
 
 ```sh
@@ -41,6 +41,7 @@ cat out/1/receipt.url    # open this link in a browser
 | [Content provenance](content-provenance/) | Capture, editing and publication of media | C2PA |
 | [Official videos edited with AI](official-videos/) | That each video was made from registered footage under a published editing recipe | Fan clubs, sports and entertainment media |
 | [Agent payments](agent-payments/) | What was requested and delivered for each payment | x402 |
+| [Reward vouchers](reward-vouchers/) | Vouchers issued and redeemed across stores, settled without a customer database | Point programs, verifiable credentials, agent wallets |
 | [Proof of environmental value](environmental-value/) | Metering, reporting and verification behind carbon credits and energy certificates | J-Credits, non-fossil certificates, registries |
 
 The samples hold domain logic; the shared plumbing in
