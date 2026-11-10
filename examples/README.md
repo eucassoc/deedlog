@@ -44,6 +44,13 @@ cat out/1/receipt.url    # open this link in a browser
 | [Reward vouchers](reward-vouchers/) | Vouchers issued and redeemed across stores, settled without a customer database | Point programs, verifiable credentials, agent wallets |
 | [Proof of environmental value](environmental-value/) | Metering, reporting and verification behind carbon credits and energy certificates | J-Credits, non-fossil certificates, registries |
 
+Outside this repository,
+[shinten's web-shop example](https://github.com/eucassoc/shinten/tree/main/examples/web-shop)
+uses `dlog` for data tiering on a fictional shop: an order form encrypted in
+the browser, its receipt, decryption on the shipping desk and deletion of
+the label file recorded in a chain that two witnesses cosign, and checked
+with `dlog verify`.
+
 The samples hold domain logic; the shared plumbing in
 [internal/demo](internal/demo/) is for the samples only. Products use the
 `core`, `witness` and `publish` packages directly.
