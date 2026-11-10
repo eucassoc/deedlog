@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/deedlog/deedlog/examples/internal/demo"
+	"github.com/eucassoc/deedlog/examples/internal/demo"
 )
 
 // Check applies the published commitment to a verified chain. It needs no

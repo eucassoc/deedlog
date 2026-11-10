@@ -14,7 +14,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/deedlog/deedlog/core"
+	"github.com/eucassoc/deedlog/core"
 )
 
 // maxProofLines is the limit on consistency proof lines in add-checkpoint.

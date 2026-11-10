@@ -9,7 +9,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/deedlog/deedlog/core"
+	"github.com/eucassoc/deedlog/core"
 )
 
 // Handler serves GET /checkpoint and GET /proof from files that the

@@ -3,7 +3,7 @@ package main
 import (
 	"slices"
 
-	"github.com/deedlog/deedlog/examples/internal/demo"
+	"github.com/eucassoc/deedlog/examples/internal/demo"
 )
 
 // Check applies the declared policy to a verified chain. It needs neither

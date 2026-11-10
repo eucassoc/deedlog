@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"math"
 
-	"github.com/deedlog/deedlog/core"
-	"github.com/deedlog/deedlog/examples/internal/demo"
+	"github.com/eucassoc/deedlog/core"
+	"github.com/eucassoc/deedlog/examples/internal/demo"
 )
 
 // Check traces every certificate in a verified MRV chain back to the

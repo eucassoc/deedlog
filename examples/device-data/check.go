@@ -3,8 +3,8 @@ package main
 import (
 	"time"
 
-	"github.com/deedlog/deedlog/core"
-	"github.com/deedlog/deedlog/examples/internal/demo"
+	"github.com/eucassoc/deedlog/core"
+	"github.com/eucassoc/deedlog/examples/internal/demo"
 )
 
 // Check verifies every recorded reading against the registry of device

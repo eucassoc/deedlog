@@ -13,8 +13,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/deedlog/deedlog/core"
-	"github.com/deedlog/deedlog/publish"
+	"github.com/eucassoc/deedlog/core"
+	"github.com/eucassoc/deedlog/publish"
 )
 
 const origin = "city.example/cameras"

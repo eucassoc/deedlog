@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"slices"
 
-	"github.com/deedlog/deedlog/core"
-	"github.com/deedlog/deedlog/examples/internal/demo"
+	"github.com/eucassoc/deedlog/core"
+	"github.com/eucassoc/deedlog/examples/internal/demo"
 )
 
 // The sample stands in for C2PA with a minimal container: the asset's

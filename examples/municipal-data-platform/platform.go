@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/deedlog/deedlog/core"
-	"github.com/deedlog/deedlog/examples/internal/demo"
+	"github.com/eucassoc/deedlog/core"
+	"github.com/eucassoc/deedlog/examples/internal/demo"
 )
 
 // The platform hosts several municipalities (tenants). Residents give

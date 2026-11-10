@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/deedlog/deedlog/core"
+	"github.com/eucassoc/deedlog/core"
 )
 
 func dlog(t *testing.T, args ...string) (string, string, int) {

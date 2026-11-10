@@ -6,7 +6,7 @@ import (
 	"sort"
 	"time"
 
-	"github.com/deedlog/deedlog/examples/internal/demo"
+	"github.com/eucassoc/deedlog/examples/internal/demo"
 )
 
 // Claim is what a store submits for settlement: its verified chain and the

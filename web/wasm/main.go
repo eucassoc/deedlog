@@ -10,8 +10,8 @@ import (
 	"strings"
 	"syscall/js"
 
-	"github.com/deedlog/deedlog/core"
-	"github.com/deedlog/deedlog/verifier"
+	"github.com/eucassoc/deedlog/core"
+	"github.com/eucassoc/deedlog/verifier"
 )
 
 func main() {

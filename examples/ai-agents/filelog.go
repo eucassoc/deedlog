@@ -12,8 +12,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/deedlog/deedlog/core"
-	"github.com/deedlog/deedlog/examples/internal/demo"
+	"github.com/eucassoc/deedlog/core"
+	"github.com/eucassoc/deedlog/examples/internal/demo"
 )
 
 // FileLog appends records to a chain file with core.Writer, resuming the

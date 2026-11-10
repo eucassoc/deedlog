@@ -6,9 +6,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/deedlog/deedlog/core"
-	"github.com/deedlog/deedlog/examples/internal/demo"
-	"github.com/deedlog/deedlog/examples/official-videos/studio"
+	"github.com/eucassoc/deedlog/core"
+	"github.com/eucassoc/deedlog/examples/internal/demo"
+	"github.com/eucassoc/deedlog/examples/official-videos/studio"
 )
 
 const (

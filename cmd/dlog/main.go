@@ -16,9 +16,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/deedlog/deedlog/core"
-	"github.com/deedlog/deedlog/publish"
-	"github.com/deedlog/deedlog/witness"
+	"github.com/eucassoc/deedlog/core"
+	"github.com/eucassoc/deedlog/publish"
+	"github.com/eucassoc/deedlog/witness"
 )
 
 const usage = `usage:

@@ -11,7 +11,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/deedlog/deedlog/core"
+	"github.com/eucassoc/deedlog/core"
 )
 
 // Registry is a verification page's trust configuration.

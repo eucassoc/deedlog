@@ -14,8 +14,8 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/deedlog/deedlog/core"
-	"github.com/deedlog/deedlog/examples/internal/demo"
+	"github.com/eucassoc/deedlog/core"
+	"github.com/eucassoc/deedlog/examples/internal/demo"
 )
 
 // The x402 messages, reduced to the fields the sample uses. See

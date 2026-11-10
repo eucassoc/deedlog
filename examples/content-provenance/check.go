@@ -1,6 +1,6 @@
 package main
 
-import "github.com/deedlog/deedlog/examples/internal/demo"
+import "github.com/eucassoc/deedlog/examples/internal/demo"
 
 // Check verifies a publisher's verified chain: every edit starts from an
 // asset the chain already holds, and every published asset traces back to

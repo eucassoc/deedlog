@@ -24,7 +24,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/deedlog/deedlog/core"
+	"github.com/eucassoc/deedlog/core"
 )
 
 //go:embed assets

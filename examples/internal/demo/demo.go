@@ -25,8 +25,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/deedlog/deedlog/core"
-	"github.com/deedlog/deedlog/witness"
+	"github.com/eucassoc/deedlog/core"
+	"github.com/eucassoc/deedlog/witness"
 )
 
 // Clock is a simulated clock, so that samples can cover weeks in a second.

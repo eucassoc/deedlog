@@ -3,7 +3,7 @@ package main
 import (
 	"strconv"
 
-	"github.com/deedlog/deedlog/examples/internal/demo"
+	"github.com/eucassoc/deedlog/examples/internal/demo"
 )
 
 // Check verifies a connector's verified chain against the protocol: data

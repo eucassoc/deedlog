@@ -16,7 +16,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/deedlog/deedlog/core"
+	"github.com/eucassoc/deedlog/core"
 )
 
 // Store keeps the latest cosigned checkpoint for each origin.

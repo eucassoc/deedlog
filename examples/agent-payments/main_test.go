@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deedlog/deedlog/examples/internal/demo"
+	"github.com/eucassoc/deedlog/examples/internal/demo"
 )
 
 func TestDeliveredAndArbitrated(t *testing.T) {

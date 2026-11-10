@@ -18,9 +18,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/deedlog/deedlog/core"
-	"github.com/deedlog/deedlog/examples/data-tiering/tiering"
-	"github.com/deedlog/deedlog/examples/internal/demo"
+	"github.com/eucassoc/deedlog/core"
+	"github.com/eucassoc/deedlog/examples/data-tiering/tiering"
+	"github.com/eucassoc/deedlog/examples/internal/demo"
 )
 
 const origin = "city.example/inquiries"

@@ -1,6 +1,6 @@
 package main
 
-import "github.com/deedlog/deedlog/examples/internal/demo"
+import "github.com/eucassoc/deedlog/examples/internal/demo"
 
 // Check verifies, on a verified chain, that every provision of data was
 // preceded by consent that had not been withdrawn, and that no service
