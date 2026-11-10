@@ -6,7 +6,7 @@ in it as high priority.
 ## Reporting a vulnerability
 
 Please report vulnerabilities privately through
-[GitHub private vulnerability reporting](https://github.com/deedlog/deedlog/security/advisories/new).
+[GitHub private vulnerability reporting](https://github.com/eucassoc/deedlog/security/advisories/new).
 Do not open a public issue.
 
 We aim to acknowledge reports within 3 business days and to agree on a

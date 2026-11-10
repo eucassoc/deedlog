@@ -16,4 +16,4 @@ Please ask first before:
 - Using the name or logo in a way that suggests endorsement by the project.
 
 Questions: open an issue on
-[github.com/deedlog/deedlog](https://github.com/deedlog/deedlog/issues).
+[github.com/eucassoc/deedlog](https://github.com/eucassoc/deedlog/issues).

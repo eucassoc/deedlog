@@ -48,7 +48,7 @@ record ──▶ chain ──▶ checkpoint ──▶ verify
 ## Quick start
 
 ```sh
-git clone https://github.com/deedlog/deedlog && cd deedlog
+git clone https://github.com/eucassoc/deedlog && cd deedlog
 go install ./cmd/dlog
 
 dlog verify docs/sample/chain.jsonl
