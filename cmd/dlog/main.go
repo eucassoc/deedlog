@@ -13,6 +13,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"runtime/debug"
 	"strings"
 	"time"
 
@@ -64,8 +65,18 @@ PEM is a file of trusted TSA root certificates; the system roots are used if
 it is omitted.
 `
 
-// version is set at build time with -ldflags "-X main.version=...".
+// version is set at build time with -ldflags "-X main.version=...". Without
+// it, a binary built by `go install module@version` reports that version.
 var version = "dev"
+
+func init() {
+	if version != "dev" {
+		return
+	}
+	if bi, ok := debug.ReadBuildInfo(); ok && bi.Main.Version != "" && bi.Main.Version != "(devel)" {
+		version = bi.Main.Version
+	}
+}
 
 func main() {
 	os.Exit(run(os.Args[1:], os.Stdout, os.Stderr))
