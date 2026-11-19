@@ -49,6 +49,7 @@ dlog verify -checkpoint checkpoint -key operator.vkey docs/sample/chain.jsonl
 
 ## 詳しく
 
+- [ハッシュチェーンとマークル木](docs/concepts.ja.md)：記録が守られる仕組みをやさしく
 - [ガイド](docs/guide.ja.md)：連署サーバー、タイムスタンプ、受領証、公開
 - [ユースケース](examples/)
 - [信頼モデル](spec/trust-model.md)と[仕様](spec/)

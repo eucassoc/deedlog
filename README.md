@@ -59,6 +59,7 @@ dlog verify -checkpoint checkpoint -key operator.vkey docs/sample/chain.jsonl
 
 ## Learn more
 
+- [Hash chains and Merkle trees](docs/concepts.md): how records are protected, in plain terms
 - [Guide](docs/guide.md): witnesses, timestamps, receipts, publishing
 - [Use cases](examples/)
 - [Trust model](spec/trust-model.md) and [specification](spec/)
