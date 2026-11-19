@@ -51,6 +51,15 @@ the browser, its receipt, decryption on the shipping desk and deletion of
 the label file recorded in a chain that two witnesses cosign, and checked
 with `dlog verify`.
 
+[EUCA's marumie demo](https://deedlog.org/demo/marumie/) adds a chain to
+[marumie](https://github.com/team-mirai/marumie), an open-source site that
+publishes political funds, on fictitious data: every addition, correction
+and deletion of a published transaction is recorded, the records themselves
+are published and cosigned by witness.euca.in, and each published entry can
+be held against its record. Its code is on the
+[deedlog-demo branch](https://github.com/eucassoc/marumie/tree/deedlog-demo)
+of a fork.
+
 The samples hold domain logic; the shared plumbing in
 [internal/demo](internal/demo/) is for the samples only. Products use the
 `core`, `witness` and `publish` packages directly.

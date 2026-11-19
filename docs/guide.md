@@ -153,3 +153,26 @@ patterns, which the operator should limit:
 | Counts in inventories | Volume and its changes over time | Record only what the declared rules need |
 | Times of recurring jobs | When data moves, and so when it is where | Declare limits only, and vary when jobs run |
 | Names of systems and tiers | Vendors and products in use | Use generic names, such as `form-service` and `archive` |
+
+## Publishing the records, or deposits only
+
+A chain can be put before witnesses in two ways, and the operator chooses.
+One question decides it: would the number of events, or when they happen,
+tell others something the operator should not show?
+
+| | Publish the records | Deposit summaries only ([anchoring](../spec/anchoring.md)) |
+|---|---|---|
+| What is public | The whole chain and its checkpoints | A chain of one summary per interval, and its checkpoints |
+| What witnesses and everyone learn | How many records there are, and when | Only that time passes |
+| Who can check | Anyone, every record | A person holding their own records, those; an auditor given the whole chain, all of it |
+| Suited to | Changes to data that is public anyway (a published ledger, a public register, figures already announced) | Records whose volume tells how the business is doing (inquiries, orders, cases) |
+| `dlog` | Supported, as this guide describes | The specification is a draft; `dlog` does not support it yet |
+
+A record of how personal data from a contact form is handled would show, if
+published, how many inquiries came in and when, so only summaries are
+deposited. A record of changes to a ledger that is itself public, political
+funds for example, has nothing to hide, and the point is that anyone can
+hold each published entry against its record, so the records are published.
+
+Witnesses cosign either the same way. What differs is what the operator
+publishes, and what a verifier holds against what.
