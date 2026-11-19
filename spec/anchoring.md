@@ -53,18 +53,29 @@ least 128 bits, the **nonce** and the **pad**, written as lowercase
 hexadecimal.
 
 The **size** of the interval's tree is the smallest power of two that is at
-least the number of records covered, and at least 1. Its leaves are:
+least the number of records covered, and at least 1. Every record of an
+anchored record chain MUST name a SHA-256 digest of its subject
+(`subject.digest.sha256`). The leaves are:
 
-- for each record covered, in order, the leaf hash of checkpoint.md §2,
-  `SHA-256(0x00 || record bytes)`;
-- then, for each remaining position `j` (counted from 0 over all leaves),
-  `SHA-256(0x00 || "deedlog-anchor-pad/v1\n" || pad bytes || j)`, with `j` as
-  a 32-bit big-endian integer and the pad as the bytes its hexadecimal form
-  encodes.
+- for the record at position `i` of the interval (counted from 0),
+  `SHA-256(0x00 || "deedlog-anchor-leaf/v1\n" || blind || subject || record)`,
+  where *blind* is `SHA-256("deedlog-anchor-blind/v1\n" || pad || i)`,
+  *subject* is the 32 bytes of the record's subject digest, and *record* is
+  the SHA-256 of the record bytes (evidence-chain.md §3);
+- then, for each remaining position `j`,
+  `SHA-256(0x00 || "deedlog-anchor-pad/v1\n" || pad || j)`.
 
-The tree is the Merkle tree of checkpoint.md §2 over these leaves. Filling
-it up to a power of two keeps a proof from telling how many records an
-interval held, beyond the order of magnitude.
+Positions are 32-bit big-endian integers, and the pad is the bytes its
+hexadecimal form encodes. The tree is the Merkle tree of checkpoint.md §2
+over these leaves.
+
+A leaf stands for a record without being its bytes. A record's bytes carry
+its sequence number, so a proof made of them would tell its holder how many
+records came before; a proof made of the leaf's three parts tells only what
+the record is about. Filling the tree up to a power of two keeps a proof
+from telling how many records the interval held, beyond the order of
+magnitude. The blind keeps the holder of one proof from testing guesses
+about the records beside it.
 
 ## 4. Anchor records
 
@@ -98,33 +109,42 @@ nothing.
 
 ## 5. Proving a record
 
-A **record proof** shows that a record was committed to. It is the record's
-line together with
+A **record proof** shows that the operator committed to a record about a
+given subject, without showing the record. It goes with the subject's bytes,
+or their SHA-256 digest, and has
 
-| Field   | Description |
-|---------|-------------|
-| `seq`   | sequence number of the anchor record |
-| `epoch` | its epoch |
-| `size`  | size of the interval's tree |
-| `index` | position of the record's leaf in it |
-| `path`  | the inclusion proof (RFC 9162 §2.1.3), base64 hashes |
-| `nonce` | the interval's nonce |
+| Field    | Description |
+|----------|-------------|
+| `seq`    | sequence number of the anchor record |
+| `epoch`  | its epoch |
+| `size`   | size of the interval's tree |
+| `index`  | position of the record's leaf in it |
+| `path`   | the inclusion proof (RFC 9162 §2.1.3), base64 hashes |
+| `nonce`  | the interval's nonce |
+| `blind`  | the record's blind, hexadecimal |
+| `record` | the SHA-256 of the record bytes, hexadecimal |
 
 A verifier MUST accept the proof only if:
 
-1. the root computed from the record's leaf hash, `index`, `size` and `path`,
-   put into the text of §4 with `epoch` and `nonce`, gives the `commit` of
-   the anchor record at `seq`;
+1. the leaf of §3, computed from `blind`, the digest of the subject's bytes
+   and `record`, leads with `index`, `size` and `path` to a root that, put
+   into the text of §4 with `epoch` and `nonce`, gives the `commit` of the
+   anchor record at `seq`;
 2. that anchor record's `epoch` equals the proof's; and
 3. the anchor chain verifies against a checkpoint, as described in
    checkpoint.md §8, whose tree size is greater than `seq`.
 
-What the proof establishes is that the record existed, unchanged, when the
-witnesses cosigned that checkpoint. A record added since the last anchor
-record has no proof yet; the operator SHOULD say by when it will.
+What the proof establishes is that a record about this subject existed when
+the witnesses cosigned that checkpoint, and has not been replaced since. A
+record added since the last anchor record has no proof yet; the operator
+SHOULD say by when it will.
 
-The operator decides to whom it gives proofs. A proof discloses the record,
-and the size of its interval's tree.
+The operator decides to whom it gives proofs. A proof discloses the subject
+(or its digest), the size of the interval's tree and the record's position in
+it; it does not disclose the record, its sequence number, or anything of the
+records beside it. What a verifier shows of a record beyond its subject is
+not covered by the proof: an operator that wants a holder to check a record's
+time or kind puts them into the subject.
 
 ## 6. Checking the whole record chain
 
@@ -138,8 +158,8 @@ Whoever is given the record chain also needs, for each anchor record, its
    checkpoint's tree size, that the first `from` is 0, and that each `from`
    equals the `to` before it; and
 4. for each anchor record, build the tree of §3 from the records `from` to
-   `to` and the pad, and check that the commitment of §4 equals the record's
-   `commit`.
+   `to` and the pad, and check that the commitment of §4 equals the anchor
+   record's `commit`.
 
 Records after the last `to` are not yet anchored.
 
@@ -163,6 +183,10 @@ before the last anchor record.
   that covers its anchor record is the witness's. A shorter interval brings
   the two closer and costs more checkpoints.
 - **The nonce and the pad are secrets until disclosed.** The nonce is
-  disclosed in every proof for its interval; the pad only with the whole
-  record chain. A pad that leaks lets a proof's holder tell padding from
-  records, and so count them.
+  disclosed in every proof for its interval, a blind in the proof of its
+  record, the pad only with the whole record chain. A pad that leaks lets a
+  proof's holder tell padding from records, and so count them.
+- **Subjects that can be guessed.** A proof shows a subject to someone who
+  already holds it. It does not hide a subject from someone who can guess it
+  and is given the proof; the operator gives proofs only to those who may
+  know the subject.
