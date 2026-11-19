@@ -52,6 +52,7 @@ dlog verify -checkpoint checkpoint -key operator.vkey docs/sample/chain.jsonl
 - [ガイド](docs/guide.ja.md)：連署サーバー、タイムスタンプ、受領証、公開
 - [ユースケース](examples/)
 - [信頼モデル](spec/trust-model.md)と[仕様](spec/)
+- [アンカリング](spec/anchoring.md)（草案）：記録を公開せずに、連署を受ける
 - 受領証の[検証ページ](web/)
 - [ロードマップ](docs/roadmap.md) · [貢献の方法](CONTRIBUTING.md) · [セキュリティ](SECURITY.md)
 

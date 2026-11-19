@@ -62,6 +62,7 @@ dlog verify -checkpoint checkpoint -key operator.vkey docs/sample/chain.jsonl
 - [Guide](docs/guide.md): witnesses, timestamps, receipts, publishing
 - [Use cases](examples/)
 - [Trust model](spec/trust-model.md) and [specification](spec/)
+- [Anchoring](spec/anchoring.md) (draft): keep the records private and still have them witnessed
 - [Verification page](web/) for receipts
 - [Roadmap](docs/roadmap.md) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md)
 
