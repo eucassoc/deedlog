@@ -1,0 +1,29 @@
+{
+  "name": "deedlog",
+  "version": "0.2.0",
+  "description": "Tamper-evident evidence chains in JavaScript: records linked by hash, C2SP checkpoints and witness cosignatures, anchoring. One file, no dependencies; runs in Workers, Node and browsers.",
+  "license": "Apache-2.0",
+  "author": "Atsushi Kojo",
+  "homepage": "https://github.com/eucassoc/deedlog/tree/main/js#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eucassoc/deedlog.git",
+    "directory": "js"
+  },
+  "bugs": "https://github.com/eucassoc/deedlog/issues",
+  "keywords": ["transparency-log", "c2sp", "tlog", "witness", "merkle-tree", "audit-log", "evidence"],
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./deedlog.js",
+    "./package.json": "./package.json"
+  },
+  "files": ["deedlog.js", "README.md", "LICENSE", "NOTICE"],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "prepack": "cp ../LICENSE ../NOTICE ."
+  }
+}

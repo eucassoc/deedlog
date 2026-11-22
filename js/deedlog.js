@@ -1,8 +1,14 @@
-// Signed notes, checkpoints, cosignatures and Merkle trees, as C2SP defines
-// them (signed-note, tlog-checkpoint, tlog-cosignature, tlog-witness) and as
-// deedlog uses them (spec/checkpoint.md). One file with no dependencies, so
-// that the same code runs in the witness, in an operator's service and in
-// the browser of whoever checks a record.
+// deedlog in JavaScript: chains of records (spec/evidence-chain.md), signed
+// notes, checkpoints, cosignatures and Merkle trees as C2SP defines them
+// (signed-note, tlog-checkpoint, tlog-cosignature, tlog-witness) and as
+// deedlog uses them (spec/checkpoint.md), and anchoring (spec/anchoring.md).
+// One file with no dependencies, so that the same code runs in a witness, in
+// an operator's service and in the browser of whoever checks a record.
+//
+// The Go implementation is core/ of the same repository. Both are held to
+// testdata/conformance: the same input gives the same bytes in both, and
+// each accepts what the other writes. docs/implementations.md lists what
+// each has and where they differ.
 //
 // SHA-256 is implemented here and is synchronous, because a Merkle root is
 // many small hashes. Ed25519 is the platform's (Web Crypto).
@@ -201,6 +207,11 @@ export function inclusionProof(leaves, i, n = leaves.length) {
   return path(i, 0, n);
 }
 
+/** Throws unless `proof` shows that `leaf` is leaf `index` of the tree (size, root). */
+export function verifyInclusion(index, size, leaf, proof, root) {
+  if (!equal(rootFromInclusion(leaf, index, size, proof), root)) throw new Error('the inclusion proof does not lead to the root');
+}
+
 // ---- keys (c2sp.org/signed-note) ----
 
 export const SIG_ED25519 = 0x01; // a note signature: operators
@@ -357,6 +368,7 @@ export function parseCheckpoint(noteText) {
   if (!/^(0|[1-9][0-9]{0,15})$/.test(sizeText)) throw new Error('malformed checkpoint size');
   const root = unb64(rootText);
   if (root.length !== 32) throw new Error('malformed checkpoint root');
+  if (sizeText === '0' && !equal(root, EMPTY_ROOT)) throw new Error('an empty checkpoint must have the root of the empty tree');
   return { origin, size: Number(sizeText), root };
 }
 
@@ -378,6 +390,7 @@ export async function signCheckpoint(leaves, signer, size = leaves.length) {
  */
 export async function verifyCheckpoint(note, operator, witnesses = [], quorum = 0) {
   if (operator.typ !== SIG_ED25519) throw new Error('the operator key is not a note signing key');
+  for (const w of witnesses) if (w.typ !== SIG_COSIGNATURE) throw new Error(`the witness key ${w.name} is not a cosignature key`);
   const { text: noteText, verified } = await openNote(note, [operator, ...witnesses]);
   if (!verified.some((v) => v.verifier === operator)) throw new Error('no signature from the operator');
   const c = parseCheckpoint(noteText);
@@ -492,15 +505,23 @@ export function readChain(lines) {
     try {
       r = JSON.parse(line);
     } catch {
-      problems.push({ line: n, reason: 'not JSON' });
+      r = undefined;
+    }
+    if (r === null || typeof r !== 'object' || Array.isArray(r)) {
+      problems.push({ line: n, reason: line.endsWith('\r') ? 'the line ends with CR; the file may have been converted to CRLF' : 'not a JSON object' });
       prev = 'sha256:' + sha256hex(line);
       return;
     }
+    if (line.endsWith('\r')) problems.push({ line: n, reason: 'the line ends with CR; the file may have been converted to CRLF' });
     if (r.spec !== 'deedlog/v0.1') problems.push({ line: n, reason: `spec is ${JSON.stringify(r.spec)}, not "deedlog/v0.1"` });
     if (i === 0 && typeof r.chain === 'string') name = r.chain;
+    if (i === 0 && !name) problems.push({ line: n, reason: 'the first record names no chain' });
     if (r.chain !== name) problems.push({ line: n, reason: `chain is ${JSON.stringify(r.chain)}; the first record names ${JSON.stringify(name)}` });
     if (r.seq !== i) problems.push({ line: n, reason: `seq is ${JSON.stringify(r.seq)}; ${i} follows the line before` });
     if (r.prev !== prev) problems.push({ line: n, reason: i ? 'prev does not match the digest of the line before; a record was changed, removed or reordered' : 'the first record names a record before it' });
+    const digest = r.subject?.digest;
+    if (!digest || typeof digest !== 'object' || !Object.keys(digest).length) problems.push({ line: n, reason: 'the subject has no digest' });
+    else if ('sha256' in digest && !/^[0-9a-f]{64}$/.test(digest.sha256)) problems.push({ line: n, reason: 'the SHA-256 digest of the subject is not 64 lowercase hexadecimal characters' });
     prev = 'sha256:' + sha256hex(line);
     const meta = {};
     if (r.meta && typeof r.meta === 'object') for (const [k, v] of Object.entries(r.meta)) if (typeof v === 'string') meta[k] = v;
@@ -516,7 +537,8 @@ export function readChain(lines) {
  */
 export function makeRecord(chain, { name, source, event, meta = {}, at = new Date() }) {
   const time = at.toISOString().replace(/\.\d{3}Z$/, 'Z');
-  const clean = { event };
+  // No prototype: a key is recorded whatever its name, "__proto__" included.
+  const clean = Object.assign(Object.create(null), { event });
   for (const [k, v] of Object.entries(meta)) if (v !== undefined && v !== '' && k !== 'event') clean[k] = String(v);
   const body = JSON.stringify({ ...clean, at: time });
   const line = JSON.stringify({
@@ -577,6 +599,7 @@ function subjectOf(line) {
  * to a power of two, so that it does not tell how many records there were.
  */
 export function anchor(lines, { chain, epoch, nonce, pad }) {
+  for (const [what, v] of [['nonce', nonce], ['pad', pad]]) if (typeof v !== 'string' || !/^([0-9a-fA-F]{2})*$/.test(v)) throw new Error(`the ${what} is not hexadecimal`);
   const p = unhex(pad);
   const size = pow2(Math.max(1, lines.length));
   const leaves = lines.map((line, i) => anchorLeaf(anchorBlind(p, i), subjectOf(line), sha256(utf8(line))));
@@ -623,6 +646,7 @@ export function rootFromInclusion(leaf, index, size, proof) {
  * the result with the public record of that interval.
  */
 export function commitOf(body, chain, at) {
+  for (const what of ['blind', 'record']) if (typeof at[what] !== 'string' || !/^[0-9a-fA-F]{64}$/.test(at[what])) throw new Error(`the ${what} is not 64 hexadecimal characters`);
   const leaf = anchorLeaf(unhex(at.blind), sha256(utf8(body)), unhex(at.record));
   const root = rootFromInclusion(leaf, at.index, at.size, at.path.map(unb64));
   return anchorCommit({ chain, epoch: at.epoch, size: at.size, root, nonce: at.nonce });
