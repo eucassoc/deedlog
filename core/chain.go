@@ -99,6 +99,24 @@ func Verify(r io.Reader) (Summary, error) {
 // VerifyLeaves is like Verify and also returns the Merkle leaf hashes of
 // the records, for checking checkpoints and building proofs.
 func VerifyLeaves(r io.Reader) (Summary, []Hash, error) {
+	return verifyRecords(r, nil)
+}
+
+// VerifyLines is like VerifyLeaves and returns the record bytes of every
+// line instead of their leaf hashes.
+func VerifyLines(r io.Reader) (Summary, [][]byte, error) {
+	var lines [][]byte
+	s, _, err := verifyRecords(r, func(line []byte, _ *Record) error {
+		lines = append(lines, bytes.Clone(line))
+		return nil
+	})
+	return s, lines, err
+}
+
+// verifyRecords verifies a chain and calls each, if not nil, with the
+// record bytes and the decoded record of every line that passed. An error
+// from each is reported with its line.
+func verifyRecords(r io.Reader, each func(line []byte, rec *Record) error) (Summary, []Hash, error) {
 	var s Summary
 	var leaves []Hash
 	br := bufio.NewReader(r)
@@ -111,8 +129,12 @@ func VerifyLeaves(r io.Reader) (Summary, []Hash, error) {
 			break
 		}
 		line = bytes.TrimSuffix(line, []byte("\n"))
-		if err := verifyLine(&s, line); err != nil {
-			return s, nil, &LineError{Line: n, Err: err}
+		rec, verr := verifyLine(&s, line)
+		if verr == nil && each != nil {
+			verr = each(line, rec)
+		}
+		if verr != nil {
+			return s, nil, &LineError{Line: n, Err: verr}
 		}
 		leaves = append(leaves, LeafHash(line))
 		if err == io.EOF {
@@ -142,37 +164,37 @@ func CheckCheckpoint(s Summary, leaves []Hash, c Checkpoint) error {
 	return nil
 }
 
-func verifyLine(s *Summary, line []byte) error {
+func verifyLine(s *Summary, line []byte) (*Record, error) {
 	if bytes.HasSuffix(line, []byte("\r")) {
-		return errors.New("line ends with CR; the file may have been converted to CRLF")
+		return nil, errors.New("line ends with CR; the file may have been converted to CRLF")
 	}
 	var r Record
 	if err := json.Unmarshal(line, &r); err != nil {
-		return fmt.Errorf("invalid JSON: %w", err)
+		return nil, fmt.Errorf("invalid JSON: %w", err)
 	}
 	if r.Spec != SpecVersion {
-		return fmt.Errorf("unsupported spec %q", r.Spec)
+		return nil, fmt.Errorf("unsupported spec %q", r.Spec)
 	}
 	if s.Count == 0 {
 		if r.Chain == "" {
-			return errors.New("chain ID is empty")
+			return nil, errors.New("chain ID is empty")
 		}
 		s.Chain = r.Chain
 	} else if r.Chain != s.Chain {
-		return fmt.Errorf("chain ID %q does not match %q", r.Chain, s.Chain)
+		return nil, fmt.Errorf("chain ID %q does not match %q", r.Chain, s.Chain)
 	}
 	if r.Seq != s.Count {
-		return fmt.Errorf("sequence number %d, want %d", r.Seq, s.Count)
+		return nil, fmt.Errorf("sequence number %d, want %d", r.Seq, s.Count)
 	}
 	if r.Prev != s.Head {
-		return fmt.Errorf("prev %q does not match digest of previous record %q", r.Prev, s.Head)
+		return nil, fmt.Errorf("prev %q does not match digest of previous record %q", r.Prev, s.Head)
 	}
 	if err := checkSubject(r.Subject); err != nil {
-		return err
+		return nil, err
 	}
 	s.Head = Digest(line)
 	s.Count++
-	return nil
+	return &r, nil
 }
 
 // checkSubject requires at least one digest. A "sha256" digest, when

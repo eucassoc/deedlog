@@ -1,7 +1,8 @@
 # deedlog anchoring — v0.1 (draft)
 
-Status: **draft**, and not yet implemented by `dlog`. Breaking changes are
-expected until v1.0.
+Status: **draft**. Breaking changes are expected until v1.0. Implemented by
+`dlog anchor` and by the JavaScript implementation (`js/`); both reproduce
+the vectors in `testdata/conformance`.
 
 The key words MUST, MUST NOT, SHOULD and MAY are to be interpreted as
 described in RFC 2119.
@@ -30,7 +31,8 @@ An anchored chain is two evidence chains
 
 - the **record chain**, which the operator keeps to itself, and
 - the **anchor chain**, which is public and checkpointed as described in
-  checkpoint.md. Its origin identifies the anchored chain.
+  checkpoint.md. Its origin identifies the anchored chain. It holds anchor
+  records (§4) and nothing else.
 
 The `chain` field of the record chain SHOULD be the anchor chain's origin
 followed by `/records`.
@@ -50,7 +52,7 @@ to `to` (exclusive), where `from` is the `to` of the anchor record before, or
 
 For each anchor record the operator draws two fresh random values of at
 least 128 bits, the **nonce** and the **pad**, written as lowercase
-hexadecimal.
+hexadecimal, two digits to the byte.
 
 The **size** of the interval's tree is the smallest power of two that is at
 least the number of records covered, and at least 1. Every record of an
@@ -67,7 +69,8 @@ anchored record chain MUST name a SHA-256 digest of its subject
 
 Positions are 32-bit big-endian integers, and the pad is the bytes its
 hexadecimal form encodes. The tree is the Merkle tree of checkpoint.md §2
-over these leaves.
+over these leaves. A verifier MUST refuse a nonce or a pad that is not
+hexadecimal.
 
 A leaf stands for a record without being its bytes. A record's bytes carry
 its sequence number, so a proof made of them would tell its holder how many
@@ -105,7 +108,13 @@ An anchor record is a record of the anchor chain whose `meta` has
 
 Epochs MUST increase along the anchor chain. The nonce keeps someone who
 knows one interval's tree from testing whether a later interval added
-nothing.
+nothing. In the text above the nonce is its hexadecimal form, not the bytes
+it encodes.
+
+An anchor record is otherwise a record like any other
+(evidence-chain.md §4). What its subject is, is not specified; the
+implementations make it the description of the event itself, as they do for
+every record they write.
 
 ## 5. Proving a record
 
@@ -123,6 +132,11 @@ or their SHA-256 digest, and has
 | `nonce`  | the interval's nonce |
 | `blind`  | the record's blind, hexadecimal |
 | `record` | the SHA-256 of the record bytes, hexadecimal |
+
+In JSON a record proof is an object with these keys, `path` being an array of
+strings. The proof does not name the record chain: whoever is handed it is
+told the `chain` field of the record chain where that is not the anchor
+chain's origin followed by `/records`.
 
 A verifier MUST accept the proof only if:
 
@@ -149,7 +163,10 @@ time or kind puts them into the subject.
 ## 6. Checking the whole record chain
 
 Whoever is given the record chain also needs, for each anchor record, its
-`seq`, `from`, `to`, `nonce` and `pad`. A verifier MUST:
+`seq`, `from`, `to`, `nonce` and `pad`: in JSON, an array of objects with
+these keys, one for every anchor record, in order. An entry MAY also carry
+the `epoch` and the `size` of its interval, which MUST then equal the anchor
+record's epoch and the size of the tree. A verifier MUST:
 
 1. verify the record chain as described in evidence-chain.md §8;
 2. verify the anchor chain against a checkpoint, as described in

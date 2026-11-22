@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"strings"
 	"testing"
+	"time"
 )
 
 // Example from c2sp.org/signed-note.
@@ -205,5 +206,37 @@ func TestParseCheckpoint(t *testing.T) {
 		if (err == nil) != ok {
 			t.Errorf("ParseCheckpoint(%q) error = %v, want ok = %v", text, err, ok)
 		}
+	}
+}
+
+// A witness whose key is configured twice is still one witness.
+func TestQuorumCountsAWitnessOnce(t *testing.T) {
+	skey, vkey, err := GenerateKey("log.example/quorum")
+	if err != nil {
+		t.Fatal(err)
+	}
+	wskey, wvkey, err := GenerateWitnessKey("witness.example")
+	if err != nil {
+		t.Fatal(err)
+	}
+	operator, _ := NewSigner(skey)
+	w, _ := NewSigner(wskey)
+	c := Checkpoint{Origin: "log.example/quorum", Size: 1, Root: LeafHash([]byte("x"))}
+	note, err := SignCheckpoint(c, operator)
+	if err != nil {
+		t.Fatal(err)
+	}
+	line, err := Cosign(c, w, time.Unix(1790000000, 0))
+	if err != nil {
+		t.Fatal(err)
+	}
+	ov, _ := NewVerifier(vkey)
+	w1, _ := NewVerifier(wvkey)
+	w2, _ := NewVerifier(wvkey)
+	if _, err := VerifyCheckpoint(append(note, line...), ov, []*Verifier{w1, w2}, 1); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := VerifyCheckpoint(append(note, line...), ov, []*Verifier{w1, w2}, 2); err == nil {
+		t.Fatal("one witness, listed twice, met a quorum of two")
 	}
 }

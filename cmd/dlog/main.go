@@ -57,12 +57,26 @@ const usage = `usage:
         check a receipt against a checkpoint, using the chain or a proof from
         "dlog prove -leaf"; exit 0 if included, 3 if not yet covered, and 4 if
         the promise is broken, writing a proof of misbehavior to PROOF
+  dlog anchor add -records RECORDS -secrets FILE [-origin NAME] [-epoch TIME] ANCHORS
+        append to the anchor chain ANCHORS one anchor record that commits to
+        the records added to RECORDS since the last one, and add the
+        interval's secrets to FILE (keep secret); -origin starts ANCHORS
+  dlog anchor prove -secrets FILE -index I RECORDS
+        print the record proof for record I, to hand to whoever may see it
+  dlog anchor check -proof FILE (-subject FILE | -digest HEX) [-records-chain NAME]
+                    [-checkpoint FILE -key VKEY [-witness VKEY]... [-quorum N]] ANCHORS
+        check that the operator committed to a record about the subject
+  dlog anchor verify -records RECORDS -secrets FILE
+                     [-checkpoint FILE -key VKEY [-witness VKEY]... [-quorum N]] ANCHORS
+        check that RECORDS is the chain that ANCHORS commits to
   dlog version
         print the version
 
 VKEY and KEY are files containing one key each. N defaults to the chain length.
 PEM is a file of trusted TSA root certificates; the system roots are used if
-it is omitted.
+it is omitted. The anchor commands follow spec/anchoring.md: ANCHORS is
+checkpointed, cosigned and verified like any chain, and without -checkpoint
+they only check the files against each other.
 `
 
 // version is set at build time with -ldflags "-X main.version=...". Without
@@ -117,6 +131,8 @@ func run(args []string, stdout, stderr io.Writer) int {
 		err = cmdMisbehavior(args[1:], stdout)
 	case "receipt":
 		err = cmdReceipt(args[1:], stdout)
+	case "anchor":
+		err = cmdAnchor(args[1:], stdout)
 	case "version":
 		fmt.Fprintf(stdout, "dlog %s (%s)\n", version, core.SpecVersion)
 	default:

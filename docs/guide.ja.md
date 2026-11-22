@@ -146,7 +146,7 @@ dlog receipt check -receipt receipt -receipt-key receipts.vkey \
 | 連署サーバーと誰もが分かること | 記録の件数と時刻 | 時間が経ったことだけ |
 | 確かめられる人 | 誰でも、全件を | 記録を受け取った本人は自分の分を。記録の全体を受け取った監査人は全件を |
 | 向いている記録 | もともと公開しているデータの変更（公開の帳簿、公開の台帳、発表した数値） | 件数が事業の状況を表すもの（問い合わせ、注文、相談の取り扱い） |
-| `dlog` | 対応している（このガイドの手順のとおり） | 仕様は草案。`dlog` はまだ対応していない |
+| `dlog` | 対応している（このガイドの手順のとおり） | `dlog anchor`（下の手順）。仕様は草案 |
 
 たとえば、問い合わせフォームの個人情報の取り扱いを記録する場合、記録を公開すると問い合わせの件数や
 時間帯が分かってしまうので、要約だけを預けます。一方、政治資金のように取引そのものを公開している
@@ -155,3 +155,36 @@ dlog receipt check -receipt receipt -receipt-key receipts.vkey \
 
 連署サーバーの側は、どちらでも同じ手順で連署します。違うのは、運営者が何を公開し、確かめる人が
 何と何を突き合わせるかです。
+
+### dlog で要約を預ける
+
+記録は、運営者の手元のチェーンに置いたままにします。一定の間隔ごとに、記録が増えていてもいなくても、
+要約を1件、もう一つの公開するチェーンに足します。公開するチェーンは、ほかのチェーンと同じように
+チェックポイントを作り、連署を受けます。
+
+```sh
+dlog anchor add -records records.jsonl -secrets secrets.json -origin example.com/log anchors.jsonl
+dlog checkpoint -key operator.key anchors.jsonl > checkpoint
+dlog cosign -key operator.vkey -witness witness.vkey=https://witness.example -out checkpoint anchors.jsonl checkpoint
+```
+
+`secrets.json` には、それぞれの要約を作るのに使った値が入ります。記録と一緒に保管してください。
+`-origin` が要るのは最初の1回だけです。ある1件の記録を見てよい人には、その記録が何についてのものかと、
+その証明を渡します。受け取った人は、公開されているチェーンだけで確かめられます。
+
+```sh
+dlog anchor prove -secrets secrets.json -index 4 records.jsonl > proof.json
+dlog anchor check -proof proof.json -subject body.json \
+  -checkpoint checkpoint -key operator.vkey -witness witness.vkey -quorum 1 anchors.jsonl
+```
+
+記録の全体と `secrets.json` を受け取った監査人は、それが要約のもとになったチェーンそのもので、
+削除・変更・挿入がないことを確かめます。
+
+```sh
+dlog anchor verify -records records.jsonl -secrets secrets.json \
+  -checkpoint checkpoint -key operator.vkey -witness witness.vkey -quorum 1 anchors.jsonl
+```
+
+[JavaScript 版](../js/)で要約を作るサービスも、同じバイト列を出します。そのサービスが預けたものを
+`dlog` で確かめられ、逆もできます。

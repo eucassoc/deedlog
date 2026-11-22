@@ -147,9 +147,13 @@ func VerifyCheckpoint(note []byte, operator *Verifier, witnesses []*Verifier, qu
 	if !slices.Contains(verified, operator) {
 		return Checkpoint{}, errors.New("checkpoint is not signed by the operator")
 	}
+	// A witness counts once, however often its key is listed.
+	seen := make(map[string]bool)
 	cosigned := 0
 	for _, w := range witnesses {
-		if slices.Contains(verified, w) {
+		key := w.name + "\n" + string(w.pub)
+		if slices.Contains(verified, w) && !seen[key] {
+			seen[key] = true
 			cosigned++
 		}
 	}

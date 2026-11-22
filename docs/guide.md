@@ -166,7 +166,7 @@ tell others something the operator should not show?
 | What witnesses and everyone learn | How many records there are, and when | Only that time passes |
 | Who can check | Anyone, every record | A person holding their own records, those; an auditor given the whole chain, all of it |
 | Suited to | Changes to data that is public anyway (a published ledger, a public register, figures already announced) | Records whose volume tells how the business is doing (inquiries, orders, cases) |
-| `dlog` | Supported, as this guide describes | The specification is a draft; `dlog` does not support it yet |
+| `dlog` | Supported, as this guide describes | `dlog anchor`, below; the specification is a draft |
 
 A record of how personal data from a contact form is handled would show, if
 published, how many inquiries came in and when, so only summaries are
@@ -176,3 +176,39 @@ hold each published entry against its record, so the records are published.
 
 Witnesses cosign either the same way. What differs is what the operator
 publishes, and what a verifier holds against what.
+
+### Depositing summaries with dlog
+
+The records stay in a chain the operator keeps. At every interval, whether
+or not anything was recorded, one summary is added to a second, public
+chain, which is checkpointed and cosigned like any other:
+
+```sh
+dlog anchor add -records records.jsonl -secrets secrets.json -origin example.com/log anchors.jsonl
+dlog checkpoint -key operator.key anchors.jsonl > checkpoint
+dlog cosign -key operator.vkey -witness witness.vkey=https://witness.example -out checkpoint anchors.jsonl checkpoint
+```
+
+`secrets.json` holds what each summary was made with; keep it with the
+records. `-origin` is needed only the first time. A person who may see one
+record is handed what it is about and its proof, and checks them against the
+public chain alone:
+
+```sh
+dlog anchor prove -secrets secrets.json -index 4 records.jsonl > proof.json
+dlog anchor check -proof proof.json -subject body.json \
+  -checkpoint checkpoint -key operator.vkey -witness witness.vkey -quorum 1 anchors.jsonl
+```
+
+An auditor who is given the records and `secrets.json` checks that they are
+the chain the summaries were made from, with nothing removed, changed or
+inserted:
+
+```sh
+dlog anchor verify -records records.jsonl -secrets secrets.json \
+  -checkpoint checkpoint -key operator.vkey -witness witness.vkey -quorum 1 anchors.jsonl
+```
+
+A service that makes its summaries with the [JavaScript implementation](../js/)
+produces the same bytes; `dlog` checks what it deposits, and the other way
+round.
