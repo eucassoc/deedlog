@@ -186,7 +186,7 @@ chain, which is checkpointed and cosigned like any other:
 ```sh
 dlog anchor add -records records.jsonl -secrets secrets.json -origin example.com/log anchors.jsonl
 dlog checkpoint -key operator.key anchors.jsonl > checkpoint
-dlog cosign -key operator.vkey -witness witness.vkey=https://witness.example -out checkpoint anchors.jsonl checkpoint
+dlog cosign -key operator.vkey -witness witness.vkey=https://witness.example -out checkpoint.cosigned anchors.jsonl checkpoint
 ```
 
 `secrets.json` holds what each summary was made with; keep it with the
@@ -197,7 +197,7 @@ public chain alone:
 ```sh
 dlog anchor prove -secrets secrets.json -index 4 records.jsonl > proof.json
 dlog anchor check -proof proof.json -subject body.json \
-  -checkpoint checkpoint -key operator.vkey -witness witness.vkey -quorum 1 anchors.jsonl
+  -checkpoint checkpoint.cosigned -key operator.vkey -witness witness.vkey -quorum 1 anchors.jsonl
 ```
 
 An auditor who is given the records and `secrets.json` checks that they are
@@ -206,7 +206,7 @@ inserted:
 
 ```sh
 dlog anchor verify -records records.jsonl -secrets secrets.json \
-  -checkpoint checkpoint -key operator.vkey -witness witness.vkey -quorum 1 anchors.jsonl
+  -checkpoint checkpoint.cosigned -key operator.vkey -witness witness.vkey -quorum 1 anchors.jsonl
 ```
 
 A service that makes its summaries with the [JavaScript implementation](../js/)

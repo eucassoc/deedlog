@@ -165,7 +165,7 @@ dlog receipt check -receipt receipt -receipt-key receipts.vkey \
 ```sh
 dlog anchor add -records records.jsonl -secrets secrets.json -origin example.com/log anchors.jsonl
 dlog checkpoint -key operator.key anchors.jsonl > checkpoint
-dlog cosign -key operator.vkey -witness witness.vkey=https://witness.example -out checkpoint anchors.jsonl checkpoint
+dlog cosign -key operator.vkey -witness witness.vkey=https://witness.example -out checkpoint.cosigned anchors.jsonl checkpoint
 ```
 
 `secrets.json` には、それぞれの要約を作るのに使った値が入ります。記録と一緒に保管してください。
@@ -175,7 +175,7 @@ dlog cosign -key operator.vkey -witness witness.vkey=https://witness.example -ou
 ```sh
 dlog anchor prove -secrets secrets.json -index 4 records.jsonl > proof.json
 dlog anchor check -proof proof.json -subject body.json \
-  -checkpoint checkpoint -key operator.vkey -witness witness.vkey -quorum 1 anchors.jsonl
+  -checkpoint checkpoint.cosigned -key operator.vkey -witness witness.vkey -quorum 1 anchors.jsonl
 ```
 
 記録の全体と `secrets.json` を受け取った監査人は、それが要約のもとになったチェーンそのもので、
@@ -183,7 +183,7 @@ dlog anchor check -proof proof.json -subject body.json \
 
 ```sh
 dlog anchor verify -records records.jsonl -secrets secrets.json \
-  -checkpoint checkpoint -key operator.vkey -witness witness.vkey -quorum 1 anchors.jsonl
+  -checkpoint checkpoint.cosigned -key operator.vkey -witness witness.vkey -quorum 1 anchors.jsonl
 ```
 
 [JavaScript 版](../js/)で要約を作るサービスも、同じバイト列を出します。そのサービスが預けたものを
