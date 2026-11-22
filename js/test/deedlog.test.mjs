@@ -76,7 +76,7 @@ const listen = (handler) =>
   });
 
 test('with dlog', { skip: !DLOG && 'set DLOG to run' }, async (ctx) => {
-  const dir = mkdtempSync(join(tmpdir(), 'tlog-'));
+  const dir = mkdtempSync(join(tmpdir(), 'deedlog-'));
   const f = (n) => join(dir, n);
   const origin = 'log.example/test';
   const lines = grow([], 5, origin);
