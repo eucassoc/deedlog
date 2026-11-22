@@ -24,6 +24,8 @@ Japanese.
 | `verifier/` | Receipt checking against a trust registry |
 | `web/` | Verification page (WebAssembly) |
 | `cmd/dlog/` | Command-line tool |
+| `js/` | JavaScript implementation (the npm package `deedlog`) |
+| `testdata/conformance/` | Vectors that the Go and the JavaScript implementation both reproduce |
 | `examples/` | Use cases, each a runnable sample |
 | `docs/` | Guide and roadmap |
 
@@ -33,7 +35,12 @@ Japanese.
 go vet ./...
 go test ./...
 gofmt -l .
+go build -o dlog ./cmd/dlog && (cd js && DLOG=../dlog npm test)
 ```
+
+A change to what either implementation writes or accepts is made in both,
+and shows as a change to `testdata/conformance/vectors.json`
+([docs/implementations.md](docs/implementations.md)).
 
 ## Sign-off
 

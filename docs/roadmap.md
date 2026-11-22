@@ -13,9 +13,13 @@ Done:
 - [x] Runnable samples for each use case, including an MCP proxy and Claude
       Code hooks for AI agents
 
+- [x] Anchoring: records kept private, summaries deposited (`dlog anchor`)
+- [x] A JavaScript implementation for Workers, Node and browsers (`js/`),
+      held to the same conformance vectors as the Go one
+
 Next:
 
-- [ ] Libraries for embedding in products, and a collector for other languages
+- [ ] A collector for other languages
 - [ ] SD-JWT VC receipt envelope (OpenID4VCI / OpenID4VP)
 - [ ] ML-DSA-44 cosignatures
 - [ ] Renewal of time-stamps for long-term retention

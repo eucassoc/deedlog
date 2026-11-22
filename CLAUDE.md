@@ -16,6 +16,10 @@ spec/evidence-chain.md, spec/checkpoint.md and spec/trust-model.md.
 - Hash bytes, not objects: never re-encode JSON to compute or check a digest.
 - `core/` and `spec/` stay domain-neutral. Municipal, legal or product-specific
   logic belongs in `collectors/`, `exporters/` or `examples/`.
+- `js/deedlog.js` is the JavaScript implementation: one file, no
+  dependencies. It and `core/` must both reproduce
+  `testdata/conformance/vectors.json`; change what one writes or accepts and
+  you change the other, the vectors and docs/implementations.md with it.
 - Standard library only unless a dependency is clearly justified (crypto
   primitives from `crypto/*`).
 - Never put personal data or evidence bodies into records; use digests, and
@@ -31,4 +35,5 @@ spec/evidence-chain.md, spec/checkpoint.md and spec/trust-model.md.
 ```sh
 go vet ./... && go test ./... && gofmt -l .
 go run ./cmd/dlog verify FILE
+go build -o dlog ./cmd/dlog && (cd js && DLOG=../dlog npm test)
 ```

@@ -24,3 +24,12 @@ jobs:
       - run: go test -race ./...
       - name: verification page (WebAssembly)
         run: GOOS=js GOARCH=wasm go vet ./web/wasm && web/build.sh /tmp/site
+      # The JavaScript implementation: the same conformance vectors as the Go
+      # tests above, and each implementation against the other's output.
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        with:
+          node-version: 22
+      - name: JavaScript implementation, against dlog
+        run: go build -o /tmp/dlog ./cmd/dlog && cd js && DLOG=/tmp/dlog npm test
+      - name: the package holds what it should
+        run: cd js && npm pack --dry-run

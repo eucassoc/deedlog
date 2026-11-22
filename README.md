@@ -63,6 +63,7 @@ dlog verify -checkpoint checkpoint -key operator.vkey docs/sample/chain.jsonl
 - [Use cases](examples/)
 - [Trust model](spec/trust-model.md) and [specification](spec/)
 - [Anchoring](spec/anchoring.md) (draft): keep the records private and still have them witnessed
+- [JavaScript implementation](js/) for Workers, Node and browsers, and [how it compares with the Go one](docs/implementations.md)
 - [Verification page](web/) for receipts
 - [Roadmap](docs/roadmap.md) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md)
 

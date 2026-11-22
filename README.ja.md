@@ -53,6 +53,7 @@ dlog verify -checkpoint checkpoint -key operator.vkey docs/sample/chain.jsonl
 - [ユースケース](examples/)
 - [信頼モデル](spec/trust-model.md)と[仕様](spec/)
 - [アンカリング](spec/anchoring.md)（草案）：記録を公開せずに、連署を受ける
+- [JavaScript 版](js/)（Workers、Node、ブラウザ）と、[Go 版との違いの一覧](docs/implementations.md)
 - 受領証の[検証ページ](web/)
 - [ロードマップ](docs/roadmap.md) · [貢献の方法](CONTRIBUTING.md) · [セキュリティ](SECURITY.md)
 
