@@ -1,0 +1,40 @@
+# Publishes the JavaScript implementation (js/) to npm as `deedlog`, when a
+# tag js/vX.Y.Z is pushed or when run by hand from the Actions tab (the
+# version in js/package.json is published then).
+#
+# No token: npm trusted publishing (OIDC) must be set up once for the package
+# on npmjs.com (Settings > Trusted Publisher > GitHub Actions, with this
+# repository and the workflow file name publish.yml).
+name: publish
+
+on:
+  push:
+    tags: ['js/v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+      - run: npm install -g npm@latest # trusted publishing needs npm 11.5.1 or later
+      # What is published is what dlog accepts: the same check as in ci.
+      - name: JavaScript implementation, against dlog
+        run: go build -o /tmp/dlog ./cmd/dlog && cd js && DLOG=/tmp/dlog npm test
+      - name: the tag must match js/package.json
+        if: github.ref_type == 'tag'
+        run: test "js/v$(node -p "require('./js/package.json').version")" = "$GITHUB_REF_NAME"
+      - run: cd js && npm publish --access public --provenance
